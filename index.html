@@ -49,8 +49,7 @@
             border: 4px solid #f3f3f3; 
             border-top: 4px solid #b58d3d; 
             border-radius: 50%; 
-            width: 30px; 
-            height: 30px; 
+            width: 30px; height: 30px; 
             animation: spin 1s linear infinite; 
             margin: 20px auto; 
         }
@@ -72,11 +71,10 @@
     </div>
 
     <script>
-        // Exact Men's Ethnic Jutti collection link mapped out explicitly
-        const EBAY_STORE_URL = "https://www.ebay.com/str/divineaura/Men-ethnic-Jutti/_i.html?store_cat=44357999016"; 
+        const EBAY_STORE_URL = "https://ebay.com"; 
         
-        // ⚠️ CRITICAL STEP: Put ONLY your numbers inside the quotes below. 
-        // No spaces, no dashes, no + sign. (Example: "919876543210")
+        // LINE 79: Change ONLY the numbers inside the quotes below!
+        // Remember: No spaces, no hyphens, and no + sign. (Example: "919876543210")
         const BUSINESS_PHONE_NUMBER = "917021662266"; 
 
         // Automatically format and encode the clean WhatsApp text link parameters
@@ -89,15 +87,15 @@
                 .then(res => res.text())
                 .then(text => {
                     const countryLine = text.split('\n').find(line => line.startsWith('loc='));
-                    const code = countryLine ? countryLine.split('=')[1] : '';
-                    if (code.toUpperCase() === 'IN') {
+                    const countryCode = countryLine ? countryLine.split('=')[1] : '';
+                    
+                    if (countryCode && countryCode.toUpperCase() === 'IN') {
                         showLocal();
                     } else {
                         window.location.href = EBAY_STORE_URL;
                     }
                 })
                 .catch(() => {
-                    // Ultimate backup: Default to local view if completely offline or stuck
                     showLocal();
                 });
         }
@@ -107,7 +105,7 @@
             document.getElementById('local-view').style.display = 'block';
         }
 
-        // Primary location lookup engine
+        // Primary location lookup engine using ipapi
         fetch('https://ipapi.co')
             .then(response => response.json())
             .then(data => {
