@@ -35,7 +35,7 @@
         }
         .btn { 
             display: block; 
-            background-color: #000000; 
+            background-color: #25D366; /* WhatsApp Brand Green */
             color: #ffffff; 
             padding: 14px 20px; 
             text-decoration: none; 
@@ -44,7 +44,7 @@
             font-size: 16px;
             transition: background 0.2s;
         }
-        .btn:hover { background-color: #222222; }
+        .btn:hover { background-color: #20ba5a; }
         .spinner { 
             border: 4px solid #f3f3f3; 
             border-top: 4px solid #b58d3d; 
@@ -69,29 +69,27 @@
     <!-- Smart Landing Interface for Indian Users -->
     <div id="local-view" class="container">
         <div class="logo-placeholder">AMBIENCE CRAFTS</div>
-        <p>Our online store selections are currently exclusive to destinations outside India. For local orders and queries, tap below to chat with us directly!</p>
-        <a href="https://instagram.com" class="btn">Message on Instagram</a>
+        <p>Our online store selections are currently exclusive to destinations outside India. For local orders and queries, tap below to message us directly on WhatsApp!</p>
+        
+        <!-- FIXME: Replace 91XXXXXXXXXX with your actual mobile number (Keep 91 prefix) -->
+        <a href="https://wa.me." class="btn">Message on WhatsApp</a>
     </div>
 
     <script>
         const EBAY_STORE_URL = "https://ebay.com"; 
 
-        // Uses a highly reliable backup API that returns pure json format
         fetch('https://ipinfo.io')
             .then(response => response.json())
             .then(data => {
                 if (data.country === 'IN') {
-                    // Confirmed India -> Show local message button
                     document.getElementById('loading-view').style.display = 'none';
                     document.getElementById('local-view').style.display = 'block';
                 } else {
-                    // Confirmed Outside India -> Instant redirect to your eBay Store
                     window.location.href = EBAY_STORE_URL;
                 }
             })
             .catch(error => {
                 console.error("Routing error:", error);
-                // Fail-safe backup fallback: Show local view if blocked
                 document.getElementById('loading-view').style.display = 'none';
                 document.getElementById('local-view').style.display = 'block';
             });
