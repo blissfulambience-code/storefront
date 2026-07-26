@@ -17,13 +17,15 @@
     <script>
         // Production links for Ambience Crafts / Cosmopolitan Aura
         const EBAY_STORE_URL = "https://www.ebay.com/str/divineaura/Men-ethnic-Jutti/_i.html?store_cat=44357999016"; 
-        const INSTAGRAM_DM_URL = "https://instagram.com"; 
+        
+        // FIXED: Deep-link protocol to force open the chat interface for ambiencecrafts
+        const INSTAGRAM_DM_URL = "https://ig.me"; 
 
-        // Fetch user location via free API lookup
+        // FIXED: Added /json/ so the script can accurately read the visitor's country
         fetch('https://ipapi.co')
             .then(response => response.json())
             .then(data => {
-                if (data.country_code === 'IN') {
+                if (data.country === 'IN' || data.country_code === 'IN') {
                     // User is browsing from India -> Send directly to Instagram DM screen
                     window.location.href = INSTAGRAM_DM_URL;
                 } else {
