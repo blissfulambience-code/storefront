@@ -15,27 +15,25 @@
     <p>Verifying your region to route you to the correct store...</p>
 
     <script>
-        // Production links for Ambience Crafts / Cosmopolitan Aura
+        // Target destination configurations
         const EBAY_STORE_URL = "https://www.ebay.com/str/divineaura/Men-ethnic-Jutti/_i.html?store_cat=44357999016"; 
-        
-        // FIXED: Deep-link protocol to force open the chat interface for ambiencecrafts
         const INSTAGRAM_DM_URL = "https://ig.me"; 
 
-        // FIXED: Added /json/ so the script can accurately read the visitor's country
+        // Execute precise tracking fetch with formatting parameters
         fetch('https://ipapi.co')
             .then(response => response.json())
             .then(data => {
                 if (data.country === 'IN' || data.country_code === 'IN') {
-                    // User is browsing from India -> Send directly to Instagram DM screen
+                    // Location Confirmed: India -> Open DM screen directly
                     window.location.href = INSTAGRAM_DM_URL;
                 } else {
-                    // User is outside India -> Route straight to your eBay store
+                    // Location Confirmed: International -> Route straight to eBay listing
                     window.location.href = EBAY_STORE_URL;
                 }
             })
             .catch(error => {
-                console.error("Error fetching location:", error);
-                // Fallback: Default to DMs if tracking is blocked by user browser settings
+                console.error("Location lookup encounter:", error);
+                // Security Fallback: Route to DMs if browser privacy extensions block the script
                 window.location.href = INSTAGRAM_DM_URL;
             });
     </script>
