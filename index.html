@@ -76,15 +76,11 @@
     <script>
         const EBAY_STORE_URL = "https://ebay.com"; 
 
-        // Uses Cloudflare's ultra-fast tracking page to instantly check the country
-        fetch('https://cloudflare.com')
-            .then(response => response.text())
+        // Uses a highly reliable backup API that returns pure json format
+        fetch('https://ipinfo.io')
+            .then(response => response.json())
             .then(data => {
-                // Extract the country code line from Cloudflare's text data
-                const countryLine = data.split('\n').find(line => line.startsWith('loc='));
-                const countryCode = countryLine ? countryLine.split('=')[1] : '';
-
-                if (countryCode === 'IN') {
+                if (data.country === 'IN') {
                     // Confirmed India -> Show local message button
                     document.getElementById('loading-view').style.display = 'none';
                     document.getElementById('local-view').style.display = 'block';
