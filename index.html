@@ -15,25 +15,27 @@
     <p>Verifying your region to route you to the correct store...</p>
 
     <script>
-        // Target destination configurations
-        const EBAY_STORE_URL = "https://www.ebay.com/str/divineaura/Men-ethnic-Jutti/_i.html?store_cat=44357999016"; 
-        const INSTAGRAM_DM_URL = "https://ig.me"; 
+        // Production links for Ambience Crafts / Cosmopolitan Aura
+        const EBAY_STORE_URL = "https://ebay.com"; 
+        
+        // FORCED APP BYPASS: Using intent protocol to force open native chat client on iOS/Android
+        const INSTAGRAM_DM_URL = "https://instagram.com"; 
 
-        // Execute precise tracking fetch with formatting parameters
+        // Fetch user location via free API lookup
         fetch('https://ipapi.co')
             .then(response => response.json())
             .then(data => {
                 if (data.country === 'IN' || data.country_code === 'IN') {
-                    // Location Confirmed: India -> Open DM screen directly
+                    // User is browsing from India -> Force profile app view
                     window.location.href = INSTAGRAM_DM_URL;
                 } else {
-                    // Location Confirmed: International -> Route straight to eBay listing
+                    // User is outside India -> Route straight to your eBay store
                     window.location.href = EBAY_STORE_URL;
                 }
             })
             .catch(error => {
-                console.error("Location lookup encounter:", error);
-                // Security Fallback: Route to DMs if browser privacy extensions block the script
+                console.error("Error fetching location:", error);
+                // Fallback: Default to profile link if API is blocked
                 window.location.href = INSTAGRAM_DM_URL;
             });
     </script>
