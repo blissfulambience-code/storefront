@@ -23,7 +23,7 @@
         .logo-placeholder {
             font-size: 24px;
             font-weight: bold;
-            color: #b58d3d; /* Elegant Gold styling to match your brand */
+            color: #b58d3d;
             margin-bottom: 10px;
             letter-spacing: 2px;
         }
@@ -69,28 +69,33 @@
     <!-- Smart Landing Interface for Indian Users -->
     <div id="local-view" class="container">
         <div class="logo-placeholder">AMBIENCE CRAFTS</div>
-        <p>Our online store selections are currently exclusive to outside India destinations. For local orders and queries, tap below to chat with us directly!</p>
+        <p>Our online store selections are currently exclusive to destinations outside India. For local orders and queries, tap below to chat with us directly!</p>
         <a href="https://instagram.com" class="btn">Message on Instagram</a>
     </div>
 
     <script>
         const EBAY_STORE_URL = "https://ebay.com"; 
 
-        fetch('https://ipapi.co')
-            .then(response => response.json())
+        // Uses Cloudflare's ultra-fast tracking page to instantly check the country
+        fetch('https://cloudflare.com')
+            .then(response => response.text())
             .then(data => {
-                if (data.country === 'IN' || data.country_code === 'IN') {
-                    // Local Visitor: Terminate loading view and display clean message interface
+                // Extract the country code line from Cloudflare's text data
+                const countryLine = data.split('\n').find(line => line.startsWith('loc='));
+                const countryCode = countryLine ? countryLine.split('=')[1] : '';
+
+                if (countryCode === 'IN') {
+                    // Confirmed India -> Show local message button
                     document.getElementById('loading-view').style.display = 'none';
                     document.getElementById('local-view').style.display = 'block';
                 } else {
-                    // International Visitor: Proceed with immediate seamless conversion
+                    // Confirmed Outside India -> Instant redirect to your eBay Store
                     window.location.href = EBAY_STORE_URL;
                 }
             })
             .catch(error => {
                 console.error("Routing error:", error);
-                // Fail-safe default
+                // Fail-safe backup fallback: Show local view if blocked
                 document.getElementById('loading-view').style.display = 'none';
                 document.getElementById('local-view').style.display = 'block';
             });
