@@ -72,37 +72,55 @@
     </div>
 
     <script>
-        const EBAY_STORE_URL = "https://ebay.com"; 
+        // Exact Men's Ethnic Jutti collection link mapped out explicitly
+        const EBAY_STORE_URL = "https://www.ebay.com/str/divineaura/Men-ethnic-Jutti/_i.html?store_cat=44357999016"; 
         
-        // ⚠️ CHANGE ONLY THIS LINE: Paste your digits inside the quotes below.
-        // No spaces, no hyphens, no plus sign (+). Just pure numbers.
+        // ⚠️ CRITICAL STEP: Put ONLY your numbers inside the quotes below. 
+        // No spaces, no dashes, no + sign. (Example: "919876543210")
         const BUSINESS_PHONE_NUMBER = "917021662266"; 
 
-        // Safely generate the clean WhatsApp API text link configuration
+        // Automatically format and encode the clean WhatsApp text link parameters
         const encodedText = encodeURIComponent("Hi Ambience Crafts! I saw your profile on Instagram and want to inquire about ordering Men Ethnic Juttis.");
         document.getElementById("whatsapp-link").href = `https://whatsapp.com{BUSINESS_PHONE_NUMBER}&text=${encodedText}`;
 
-        // Fetch location data from alternative clear database
+        // Secondary fallback checking engine using Cloudflare's server parameters directly
+        function checkFallback() {
+            fetch('https://cloudflare.com')
+                .then(res => res.text())
+                .then(text => {
+                    const countryLine = text.split('\n').find(line => line.startsWith('loc='));
+                    const code = countryLine ? countryLine.split('=')[1] : '';
+                    if (code.toUpperCase() === 'IN') {
+                        showLocal();
+                    } else {
+                        window.location.href = EBAY_STORE_URL;
+                    }
+                })
+                .catch(() => {
+                    // Ultimate backup: Default to local view if completely offline or stuck
+                    showLocal();
+                });
+        }
+
+        function showLocal() {
+            document.getElementById('loading-view').style.display = 'none';
+            document.getElementById('local-view').style.display = 'block';
+        }
+
+        // Primary location lookup engine
         fetch('https://ipapi.co')
             .then(response => response.json())
             .then(data => {
-                // FIXED: Normalizes response text strings to absolute uppercase
                 const detectedCountry = (data.country_code || data.country || '').toUpperCase();
-
                 if (detectedCountry === 'IN') {
-                    // Verified Indian User -> Turn off loader and present WhatsApp interface
-                    document.getElementById('loading-view').style.display = 'none';
-                    document.getElementById('local-view').style.display = 'block';
+                    showLocal();
                 } else {
-                    // Verified Overseas User -> Seamless bounce straight onto your eBay catalog
                     window.location.href = EBAY_STORE_URL;
                 }
             })
             .catch(error => {
-                console.error("Location lookup failure:", error);
-                // Security Fallback: Default to your local WhatsApp page view if script encounters a block
-                document.getElementById('loading-view').style.display = 'none';
-                document.getElementById('local-view').style.display = 'block';
+                console.warn("Primary tracking hit a block, waking up Cloudflare engine...");
+                checkFallback();
             });
     </script>
 </body>
