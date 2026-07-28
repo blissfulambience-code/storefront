@@ -54,7 +54,7 @@
 
   <div id="blocked" class="hidden">
     <h1>This store isn't available in your region.</h1>
-    <p>Please send us a DM on Instagram <a href="https://instagram.com/ambiencecrafts" style="color:#9cdcfe;">@ambiencecrafts</a> instead.</p>
+    <p>For queries and orders, please DM us on Instagram <a href="https://instagram.com/ambiencecrafts" style="color:#9cdcfe;">@ambiencecrafts</a> or WhatsApp us on the number listed on our Instagram profile.</p>
   </div>
 
   <div id="fallback" class="hidden">
@@ -65,8 +65,19 @@
 </div>
 
 <script>
-  const EBAY_URL = "https://www.ebay.com/str/divineaura";
+  const DEFAULT_EBAY_URL = "https://www.ebay.com/str/divineaura"; // USA - used as default
   const BLOCKED_COUNTRY = "IN"; // India
+
+  // Country-specific eBay store URLs
+  const COUNTRY_STORE_MAP = {
+    "US": "https://www.ebay.com/str/divineaura",
+    "GB": "https://www.ebay.co.uk/str/divineaura",
+    "DE": "https://www.ebay.de/str/divineaura",
+    "FR": "https://www.ebay.fr/str/divineaura",
+    "ES": "https://www.ebay.es/str/divineaura",
+    "IT": "https://www.ebay.it/str/divineaura",
+    "AU": "https://www.ebay.com.au/str/divineaura"
+  };
 
   const loadingEl = document.getElementById('loading');
   const blockedEl = document.getElementById('blocked');
@@ -77,8 +88,8 @@
     blockedEl.classList.remove('hidden');
   }
 
-  function redirectToEbay() {
-    window.location.replace(EBAY_URL);
+  function redirectToEbay(url) {
+    window.location.replace(url || DEFAULT_EBAY_URL);
   }
 
   // Primary geolocation lookup, with a couple of fallbacks in case one API is down.
@@ -109,13 +120,14 @@
     if (country === BLOCKED_COUNTRY) {
       showBlocked();
     } else if (country) {
-      redirectToEbay();
+      const storeUrl = COUNTRY_STORE_MAP[country] || DEFAULT_EBAY_URL;
+      redirectToEbay(storeUrl);
     } else {
       // Couldn't determine location — show a manual link rather than
       // silently blocking a legitimate international visitor.
       loadingEl.classList.add('hidden');
       fallbackEl.classList.remove('hidden');
-      setTimeout(redirectToEbay, 1500);
+      setTimeout(() => redirectToEbay(DEFAULT_EBAY_URL), 1500);
     }
   })();
 </script>
