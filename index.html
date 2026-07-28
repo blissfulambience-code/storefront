@@ -16,22 +16,22 @@
 <body>
 
     <script>
-        // Exact URLs configured for your specified destinations
+        // Exact destination URLs configured for your store parameters
         const INDIA_URL = "https://www.ebay.com";
         const INTERNATIONAL_STORE_URL = "https://www.ebay.com/str/divineaura";
 
-        // Querying an ultra-compatible, unblockable free location endpoint
-        fetch('https://freeipapi.com')
+        // Querying a stable, unblockable free location endpoint
+        fetch('https://freeipapi.com/api/json')
             .then(response => response.json())
             .then(data => {
-                // Read and format the country code string values clearly
+                // FIXED: Correctly extracts the exact 'countryCode' variable string from freeipapi
                 const country = (data.countryCode || '').toUpperCase();
 
                 if (country === 'IN') {
-                    // Visitor inside India -> Route to basic eBay homepage
+                    // Visitor is inside India -> Route to standard eBay home view
                     window.location.replace(INDIA_URL);
                 } else {
-                    // Visitor outside India -> Route to your custom store
+                    // Visitor is outside India -> Route to your Cosmopolitan Aura store dashboard
                     window.location.replace(INTERNATIONAL_STORE_URL);
                 }
             })
