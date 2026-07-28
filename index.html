@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading Store...</title>
     <style>
+        /* Transparent layout that loads smoothly inside the Instagram app browser */
         body { 
             background-color: #fafafa; 
             margin: 0; 
@@ -15,36 +16,26 @@
 <body>
 
     <script>
-        // Set your store as the primary destination
-        const INTERNATIONAL_STORE_URL = "https://ebay.com";
-        const INDIA_URL = "https://ebay.com";
+        const INDIA_URL = "https://www.ebay.com";
+        const INTERNATIONAL_STORE_URL = "https://www.ebay.com/str/divineaura";
 
-        // Query Cloudflare's instant trace system (never gets blocked or throttled)
-        fetch('https://cloudflare.com')
-            .then(response => response.text())
+        // Instantly scans the visitor's network location parameters 
+        fetch('https://ip-api.com')
+            .then(response => response.json())
             .then(data => {
-                // Extract the exact country code line from Cloudflare's text block
-                const lines = data.split('\n');
-                let countryCode = '';
-                
-                for (let i = 0; i < lines.length; i++) {
-                    if (lines[i].startsWith('loc=')) {
-                        countryCode = lines[i].split('=')[1].toUpperCase();
-                        break;
-                    }
-                }
+                const country = (data.countryCode || '').toUpperCase();
 
-                if (countryCode === 'IN') {
-                    // Confirmed India traffic -> Route to base eBay
+                if (country === 'IN') {
+                    // Verified Indian Network -> Open generic eBay homepage
                     window.location.replace(INDIA_URL);
                 } else {
-                    // Everyone else (US, UK, CA, etc.) -> Route straight to your store
+                    // Verified Overseas Network -> Open Cosmopolitan Aura storefront
                     window.location.replace(INTERNATIONAL_STORE_URL);
                 }
             })
             .catch(error => {
-                console.warn("Trace failed, falling back to international store default.");
-                // CRITICAL FIX: If anything blocks the script, default to your store instead of the home page!
+                console.error("Routing error encountered:", error);
+                // Security Backup: Automatically routes to your store if an ad-blocker stops the scanner
                 window.location.replace(INTERNATIONAL_STORE_URL);
             });
     </script>
