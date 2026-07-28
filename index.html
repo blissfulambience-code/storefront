@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading Store...</title>
     <style>
-        /* Neutral look to make it blend invisibly inside Instagram's internal browser app */
+        /* Matches Instagram's default browser interface backdrop style */
         body { 
             background-color: #fafafa; 
             margin: 0; 
@@ -16,25 +16,27 @@
 <body>
 
     <script>
+        // Use the absolute shop catalog parameters to prevent eBay's server block
         const EBAY_STORE_URL = "https://ebay.com";
 
-        // Querying an alternative lookup engine built to handle unrestricted free traffic 
-        fetch('https://api.country.is')
+        fetch('https://country.is')
             .then(response => response.json())
             .then(data => {
                 const country = (data.country || '').toUpperCase();
 
                 if (country === 'IN') {
-                    // Confirmed India: Completely terminates execution, keeping the screen blank
+                    // Confirmed Indian traffic -> Leave the screen completely empty
                     console.log("Domestic traffic held.");
                 } else {
-                    // Outside India (US, UK, etc.): Instant forwarding step execution
-                    window.location.href = EBAY_STORE_URL;
+                    // Confirmed International traffic -> Trigger safe natural frame push
+                    setTimeout(function() {
+                        window.location.replace(EBAY_STORE_URL);
+                    }, 100);
                 }
             })
             .catch(error => {
-                console.error("Traffic handler fallback trigger:", error);
-                // System Error Backup: Default to the blank page for optimal local safety
+                console.error("Tracking error logic:", error);
+                // System Block Backup: Stay blank for local protection rules
             });
     </script>
 </body>
