@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading Store...</title>
     <style>
-        /* Invisible background matching the default Instagram browse window layout */
         body { 
             background-color: #fafafa; 
             margin: 0; 
@@ -16,29 +15,37 @@
 <body>
 
     <script>
-        // Exact destination URLs configured for your store parameters
-        const INDIA_URL = "https://www.ebay.com";
-        const INTERNATIONAL_STORE_URL = "https://www.ebay.com/str/divineaura";
+        // Set your store as the primary destination
+        const INTERNATIONAL_STORE_URL = "https://ebay.com";
+        const INDIA_URL = "https://ebay.com";
 
-        // Querying a stable, unblockable free location endpoint
-        fetch('https://freeipapi.com/api/json')
-            .then(response => response.json())
+        // Query Cloudflare's instant trace system (never gets blocked or throttled)
+        fetch('https://cloudflare.com')
+            .then(response => response.text())
             .then(data => {
-                // FIXED: Correctly extracts the exact 'countryCode' variable string from freeipapi
-                const country = (data.countryCode || '').toUpperCase();
+                // Extract the exact country code line from Cloudflare's text block
+                const lines = data.split('\n');
+                let countryCode = '';
+                
+                for (let i = 0; i < lines.length; i++) {
+                    if (lines[i].startsWith('loc=')) {
+                        countryCode = lines[i].split('=')[1].toUpperCase();
+                        break;
+                    }
+                }
 
-                if (country === 'IN') {
-                    // Visitor is inside India -> Route to standard eBay home view
+                if (countryCode === 'IN') {
+                    // Confirmed India traffic -> Route to base eBay
                     window.location.replace(INDIA_URL);
                 } else {
-                    // Visitor is outside India -> Route to your Cosmopolitan Aura store dashboard
+                    // Everyone else (US, UK, CA, etc.) -> Route straight to your store
                     window.location.replace(INTERNATIONAL_STORE_URL);
                 }
             })
             .catch(error => {
-                console.error("Routing process warning:", error);
-                // System Safety Backup: Fallback to the main eBay homepage if data center blocks lookups
-                window.location.replace(INDIA_URL);
+                console.warn("Trace failed, falling back to international store default.");
+                // CRITICAL FIX: If anything blocks the script, default to your store instead of the home page!
+                window.location.replace(INTERNATIONAL_STORE_URL);
             });
     </script>
 </body>
