@@ -3,38 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting to Shop...</title>
+    <title>Loading...</title>
     <style>
+        /* Matches Instagram's dark/light neutral loading tone so it looks completely natural */
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            text-align: center; 
-            padding: 50px 20px; 
-            color: #333; 
-            background-color: #fafafa;
+            background-color: #fafafa; 
+            margin: 0; 
+            padding: 0; 
         }
-        .spinner { 
-            border: 4px solid #f3f3f3; 
-            border-top: 4px solid #b58d3d; 
-            border-radius: 50%; 
-            width: 35px; 
-            height: 35px; 
-            animation: spin 1s linear infinite; 
-            margin: 20px auto; 
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
-    
-    <!-- FIXED METADATA REDIRECT: Absolute raw store routing override -->
-    <meta http-equiv="refresh" content="0;url=https://www.ebay.com/str/divineaura">
 </head>
 <body>
 
-    <div class="spinner"></div>
-    <p>Opening international storefront...</p>
-
     <script>
-        // FIXED JAVASCRIPT REDIRECT: Cleared out tracking hooks to ensure direct storefront landing
-        window.location.href = "https://www.ebay.com/str/divineaura";
+        const EBAY_STORE_URL = "https://ebay.com"; 
+
+        // Check visitor country location
+        fetch('https://ipapi.co')
+            .then(response => response.json())
+            .then(data => {
+                const detectedCountry = (data.country_code || data.country || '').toUpperCase();
+
+                if (detectedCountry === 'IN') {
+                    // Visitor is in India -> Do absolutely nothing. 
+                    // The page remains blank and static, keeping them inside Instagram.
+                    console.log("Local traffic blocked.");
+                } else {
+                    // Visitor is Outside India -> Instantly forward to your eBay store
+                    window.location.href = EBAY_STORE_URL;
+                }
+            })
+            .catch(error => {
+                console.error("Lookup error:", error);
+                // Security Fallback: If tracking is completely blocked, stay on the blank page to be safe
+            });
     </script>
 </body>
 </html>
