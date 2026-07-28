@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading...</title>
+    <title>Loading Store...</title>
     <style>
-        /* Matches Instagram's dark/light neutral loading tone so it looks completely natural */
+        /* Neutral look to make it blend invisibly inside Instagram's internal browser app */
         body { 
             background-color: #fafafa; 
             margin: 0; 
@@ -16,26 +16,25 @@
 <body>
 
     <script>
-        const EBAY_STORE_URL = "https://ebay.com"; 
+        const EBAY_STORE_URL = "https://ebay.com";
 
-        // Check visitor country location
-        fetch('https://ipapi.co')
+        // Querying an alternative lookup engine built to handle unrestricted free traffic 
+        fetch('https://api.country.is')
             .then(response => response.json())
             .then(data => {
-                const detectedCountry = (data.country_code || data.country || '').toUpperCase();
+                const country = (data.country || '').toUpperCase();
 
-                if (detectedCountry === 'IN') {
-                    // Visitor is in India -> Do absolutely nothing. 
-                    // The page remains blank and static, keeping them inside Instagram.
-                    console.log("Local traffic blocked.");
+                if (country === 'IN') {
+                    // Confirmed India: Completely terminates execution, keeping the screen blank
+                    console.log("Domestic traffic held.");
                 } else {
-                    // Visitor is Outside India -> Instantly forward to your eBay store
+                    // Outside India (US, UK, etc.): Instant forwarding step execution
                     window.location.href = EBAY_STORE_URL;
                 }
             })
             .catch(error => {
-                console.error("Lookup error:", error);
-                // Security Fallback: If tracking is completely blocked, stay on the blank page to be safe
+                console.error("Traffic handler fallback trigger:", error);
+                // System Error Backup: Default to the blank page for optimal local safety
             });
     </script>
 </body>
