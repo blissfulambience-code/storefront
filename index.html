@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading Store...</title>
     <style>
-        /* Matches Instagram's default browser interface backdrop style */
+        /* Blends cleanly with the Instagram in-app browser interface background */
         body { 
             background-color: #fafafa; 
             margin: 0; 
@@ -16,27 +16,26 @@
 <body>
 
     <script>
-        // Use the absolute shop catalog parameters to prevent eBay's server block
-        const EBAY_STORE_URL = "https://ebay.com";
+        const EBAY_STORE_URL = "https://www.ebay.com/str/divineaura";
 
-        fetch('https://country.is')
+        // Querying ip-api.com which is fully compatible with international testing bots
+        fetch('https://ip-api.com')
             .then(response => response.json())
             .then(data => {
-                const country = (data.country || '').toUpperCase();
+                // Ensure country code formatting is read cleanly as uppercase (e.g., "IN" or "US")
+                const country = (data.countryCode || '').toUpperCase();
 
                 if (country === 'IN') {
-                    // Confirmed Indian traffic -> Leave the screen completely empty
-                    console.log("Domestic traffic held.");
+                    // Visitor is inside India: Terminate everything and keep page completely blank
+                    console.log("Traffic stopped for India.");
                 } else {
-                    // Confirmed International traffic -> Trigger safe natural frame push
-                    setTimeout(function() {
-                        window.location.replace(EBAY_STORE_URL);
-                    }, 100);
+                    // Visitor is outside India (USA, UK, etc.): Send straight to your eBay store front
+                    window.location.replace(EBAY_STORE_URL);
                 }
             })
             .catch(error => {
-                console.error("Tracking error logic:", error);
-                // System Block Backup: Stay blank for local protection rules
+                console.error("Routing error:", error);
+                // Security Backup: Keep page blank if tracking is completely blocked by user settings
             });
     </script>
 </body>
