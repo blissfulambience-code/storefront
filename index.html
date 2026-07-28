@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading Store...</title>
     <style>
-        /* Blends cleanly with the Instagram in-app browser interface background */
+        /* Invisible background matching the default Instagram browse window layout */
         body { 
             background-color: #fafafa; 
             margin: 0; 
@@ -16,26 +16,29 @@
 <body>
 
     <script>
-        const EBAY_STORE_URL = "https://www.ebay.com/str/divineaura";
+        // Exact URLs configured for your specified destinations
+        const INDIA_URL = "https://www.ebay.com";
+        const INTERNATIONAL_STORE_URL = "https://www.ebay.com/str/divineaura";
 
-        // Querying ip-api.com which is fully compatible with international testing bots
-        fetch('https://ip-api.com')
+        // Querying an ultra-compatible, unblockable free location endpoint
+        fetch('https://freeipapi.com')
             .then(response => response.json())
             .then(data => {
-                // Ensure country code formatting is read cleanly as uppercase (e.g., "IN" or "US")
+                // Read and format the country code string values clearly
                 const country = (data.countryCode || '').toUpperCase();
 
                 if (country === 'IN') {
-                    // Visitor is inside India: Terminate everything and keep page completely blank
-                    console.log("Traffic stopped for India.");
+                    // Visitor inside India -> Route to basic eBay homepage
+                    window.location.replace(INDIA_URL);
                 } else {
-                    // Visitor is outside India (USA, UK, etc.): Send straight to your eBay store front
-                    window.location.replace(EBAY_STORE_URL);
+                    // Visitor outside India -> Route to your custom store
+                    window.location.replace(INTERNATIONAL_STORE_URL);
                 }
             })
             .catch(error => {
-                console.error("Routing error:", error);
-                // Security Backup: Keep page blank if tracking is completely blocked by user settings
+                console.error("Routing process warning:", error);
+                // System Safety Backup: Fallback to the main eBay homepage if data center blocks lookups
+                window.location.replace(INDIA_URL);
             });
     </script>
 </body>
